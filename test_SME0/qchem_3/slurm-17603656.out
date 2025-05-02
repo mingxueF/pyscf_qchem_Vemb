@@ -1,0 +1,16 @@
+SLURM job settings:
+-- job ID         : 17603656
+-- job name       : test
+-- cpus per task  : 20
+-- time limit     :   00:30:00 
+-- memory (/node) : 300000
+-- submitted from : /home/fum/pyscf_2qchem/test_SME0/qchem_3
+-- running node   : cpu298
+---------------------------------------------------
+Q-Chem 5.1 compiled with [intel mkl openmp release]
+-- Intel compiler: intel/2020a
+-- Enabled Q-Chem features: openmp, cosmo, intracule
+This is a multi-thread run using 20 threads
+/home/share/wesolowski/qc5.aug2021.FDE/exe/qcprog.exe .emb.in.2014058.qcin.1 /srv/beegfs/scratch/users/f/fum/qchem2014058/
+/home/share/wesolowski/qc5.aug2021.FDE/exe/qcprog.exe .emb.in.2014058.qcin.2 /srv/beegfs/scratch/users/f/fum/qchem2014058/
+Plots files are placed in /home/fum/pyscf_2qchem/test_SME0/qchem_3/emb.out.plots
