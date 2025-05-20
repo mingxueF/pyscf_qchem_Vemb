@@ -1,4 +1,62 @@
 import numpy as np
+import json
+
+def get_sort_list(natoms, orders):
+    """Get the molecule sord list for transforming matrices
+
+    Parameters:
+    -----------
+    natoms : int
+        Number of atoms in the molecule.
+    orders : list[list[ N atoms (int)]]
+        Order of basis functions compared to reference program,
+        one list per atom.
+
+    Returns:
+    --------
+    List with the whole molecule order indices.
+
+    """
+    sort = []
+    offset = 0
+    for iatom in range(natoms):
+        for n in orders[iatom]:
+            sort.append(n + offset)
+        offset += len(orders[iatom])
+    return sort
+
+def get_order_lists_SME0(atoms, basis_dict):
+    """Get list of orders for matrix re-ordering.
+
+    Parameters
+    ----------
+    atoms : np.darray(int)
+        Atoms in molecule/fragment.
+    basis_dict : dict
+        Known orders for each row/group in the periodic table.
+
+    Returns
+    -------
+    orders : list[list[],]
+        List with order for each atom.
+    """
+    if not isinstance(atoms, np.ndarray):
+        raise TypeError("`atoms` must be provided in a np.darray.")
+    if atoms.dtype != int:
+        raise NotImplementedError('For now, atomic numbers are accepted only.')
+    orders = []
+    for atom in atoms:
+        if atom == 1:
+            orders.append(basis_dict['H'])
+        elif atom == 8:
+            orders.append(basis_dict['O'])
+        elif 2 < atom <= 10:
+            orders.append(basis_dict['second'])  # fallback for 2nd row elements not explicitly listed
+        elif 11 <= atom <= 18:
+            orders.append(basis_dict['third'])   # fallback for 3rd row
+        else:
+            raise NotImplementedError(f"Atom Z={atom} not supported yet.")
+    return orders
 
 def get_order_lists(atoms, basis_dict):
     """Get list of orders for matrix re-ordering.
@@ -29,6 +87,7 @@ def get_order_lists(atoms, basis_dict):
             orders.append(basis_dict['third'])
         else:
             raise NotImplementedError('At the moment only first and second row elements are available.')
+
     return orders
 
 
@@ -103,6 +162,9 @@ def reorder_matrix(inmat, inprog, outprog, basis, atoms, jsonfn):
     # check that there is info for the basis requested
     if not formatdata[transkey][basis]:
         raise KeyError("The information for %s basis is missing." % basis)
-    orders = get_order_lists(atoms, formatdata[transkey][basis])
+    if basis.lower() == "SME0":
+        orders = get_order_lists_SME0(atoms, formatdata[transkey][basis])
+    else:
+        orders = get_order_lists(atoms, formatdata[transkey][basis])
     ordered = transform(inmat, natoms, orders)
     return ordered
