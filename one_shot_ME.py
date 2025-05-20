@@ -26,23 +26,23 @@ charge_a = -1
 charge_b = 0
 mola = gto.M(atom=frags["A"], basis = basis, charge=charge_a)
 molb = gto.M(atom=frags["B"], basis=basis,verbose=3,charge=charge_b)
+chelpg = np.array([-0.7046, 0.3730, -0.6684])
+
 #############################################################
 # Get reference densities
 #############################################################
-# TIP: For HF you only need: scfres1 = scf.RHF(mol)
 # Fragment A
 scfres = scf.RHF(mola)
 scfres.conv_tol = 1e-9
 scfres.kernel()
 dma = scfres.make_rdm1()
-#fragA_mp2 = mp.MP2(scfres).run()
-#dma_mp1 = fragA_mp2.make_rdm1(ao_repr = True)
+# MP1 density is used
+fragA_mp2 = mp.MP2(scfres).run()
+dma = fragA_mp2.make_rdm1(ao_repr = True)
 # Fragment B
 #scfres1 = scf.RHF(molb)
-print("getting rho_B---")
 #scfres1 = scf.addons.remove_linear_dep_(scfres1).run()
-dmb = prepol_B(frags, basis)
-print("rho_b fini")
+dmb = prepol_B(frags, basis, chelpg)  #rho_b is pre-polarised
 #############################################################
 # Make embedding potential 
 #############################################################
@@ -53,7 +53,7 @@ newatom = '\n'.join([mola.atom, molb.atom])
 system = gto.M(atom=newatom, basis=basis, charge=charge_a+charge_b)
 # Construct grid for complex
 grids = gen_grid.Grids(system)
-grids.level = 3
+grids.level = 4
 grids.build()
 # call here vemb by the request functional
 functional = "NDCS"
