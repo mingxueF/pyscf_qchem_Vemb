@@ -185,7 +185,7 @@ def _kinetic_ndsd2_potential(rho0_devs, rho1_devs):
         laplacian = rho_devs[4]
     """
     rho_tot = rho0_devs + rho1_devs                         #rho_tot=rho_A+rho_B
-    etf_tot, vtf_tot = compute_ldacorr_pyscf(rho_tot, xc_code='LDA_K_TF')
+    etf_tot, vtf_tot = compute_ldacorr_pyscf(rho_tot[0], xc_code='LDA_K_TF')
     etf_0, vtf_0 = compute_ldacorr_pyscf(rho0_devs[0], xc_code='LDA_K_TF')
     sfactor = ndsd2_switch_factor(rho1_devs[0])                #NDSD2 switching function
     wpot = compute_kinetic_weizsacker_modified(rho1_devs)   #Limit potential (gamma=1)
