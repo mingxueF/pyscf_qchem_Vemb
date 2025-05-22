@@ -1,6 +1,54 @@
 # pyscf\_qchem\_Vemb
 
-*pyscf\_qchem\_Vemb* serves as a bridge between **PySCF** and the **development version of Q‑Chem** that imports embedding potential matrix `v_emb` (AO basis) generated from PySCF to qchem for further desired calculations.  It provides helper scripts for:
+## Runnning FDET calculations in **Q-chem** 
+With availbale xc, T functional supported by **Q-chem**, a sample input for runnning a ADC(2) calculation with FDET implementation looks like this:
+
+```text
+$rem
+  sym_ignore       true
+  method           adc(2)
+  basis            6-31+G*
+  ee_states            1
+  fde              true
+  PURECART         2
+  adc_davidson_maxiter 900
+  adc_print            3
+  adc_prop_es          true
+  gen_scfman           false
+  molden_format        true
+  mem_static       1024
+  mem_total        50000
+$end
+
+$molecule
+$molecule
+  -1 1
+  --
+  -1 1
+  S  0.70955  -0.28088  -1.53333
+  C  0.46967  -0.20843   0.13142
+  N  0.36180  -0.12531   1.30404
+  --
+  0 1
+  O      -1.4840500000    -2.4338300000    -1.1651400000
+  H      -1.0121100000    -3.3058300000    -1.4099100000 
+  H      -0.8123400000    -1.7394400000    -1.4038700000
+$end
+
+$fde
+T_Func TF
+X_Func Slater
+C_Func VWN5
+expansion ME
+rhoB_method hf
+rhoA_method mp
+PrintLevel 3
+debug true
+$end
+```
+
+## Reading external potential from **PySCF** to **Q-Chem**
+*pyscf\_qchem\_Vemb* serves as a bridge between **PySCF** and the **development version of Q‑Chem** developed in Wesolowski Group that imports embedding potential matrix `v_emb` (AO basis) generated from PySCF to qchem for further desired calculations.  It provides helper scripts for:
 
 * generating AO‑basis embedding potentials (`v_emb`) in PySCF,
 * re‑ordering those matrices to match Q‑Chem’s AO ordering, and
