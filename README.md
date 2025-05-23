@@ -1,7 +1,7 @@
 # pyscf\_qchem\_Vemb
 
 ## Runnning FDET calculations in **Q-chem** 
-With availbale xc, T functional supported by **Q-chem**, a sample input for runnning a ADC(2) calculation with FDET implementation looks like this:
+With availbale XC, T functional supported by **Q-chem**, a sample input for runnning a ADC(2) calculation within the FDET implementation looks like this:
 
 ```text
 $rem
@@ -20,7 +20,6 @@ $rem
   mem_total        50000
 $end
 
-$molecule
 $molecule
   -1 1
   --
